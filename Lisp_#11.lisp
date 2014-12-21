@@ -1,0 +1,23 @@
+(defun map-range (fn start end)
+  (do ((begin start (if (< begin end)
+                        (1+ begin)
+                        (1- begin)))
+       (lst nil (cons (funcall fn begin) lst)))
+      ((= begin end) (reverse lst))))
+
+(defun find-range (fn start end)
+  (if (< start end)
+      (or (when (funcall fn start) start)
+          (find-range fn (1+ start) end))
+      (and (> start end)
+           (or (when (funcall fn start) start)
+               (find-range fn (1- start) end)))))
+
+(defun every-range (fn start end)
+  (or (= start end)
+      (do ((begin start (if (< begin end)
+                            (1+ begin)
+                            (1- begin)))
+       (boolean t (funcall fn begin)))
+      ((or (= begin end) (not boolean)) boolean))))
+

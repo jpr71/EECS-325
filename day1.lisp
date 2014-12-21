@@ -1,0 +1,33 @@
+(in-package :cs325-user)
+
+(define-test match-p
+  (assert-true (match-p '? 'a))
+  (assert-true (match-p 'a 'a))
+  (assert-false (match-p 'b 'a))
+  (assert-true (match-p '() '()))
+  (assert-true (match-p '(?) '(a)))
+  (assert-false  (match-p '(?) '(a b)))
+  (assert-true (match-p '? '(a b)))
+  (assert-true (match-p '(? b ?) '(a b c)))
+  (assert-false (match-p '((?)) '((a b))))
+  (assert-true (match-p '((? ?)) '((a b))))
+  (assert-false (match-p '(? ?) '((a b))))
+  (assert-false (match-p '(?) '()))
+  (assert-true (match-p '? '()))
+  (assert-false (match-p '(?) 'a))
+)
+
+(defun my-equal (x y)
+  (cond ((atom x) (eql x y))
+        ((atom y) nil)
+        ((my-equal (car x) (car y))
+         (my-equal (cdr x) (cdr y)))
+        (t nil)))
+
+
+(defun match-p (x y)
+  (cond ((eql x '?) t)
+        ((atom x) (eql x y))
+        ((atom y) nil)
+        ((not (= (length x) (length y))) nil)
+        (t nil)))
